@@ -40,6 +40,12 @@ import java.util.List;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import androidx.transition.TransitionManager;
+import androidx.transition.Slide;
+import android.view.Gravity;
+import androidx.transition.TransitionManager;
+import androidx.transition.Slide;
+import android.view.Gravity;
 
 public class MainMenuFragment extends Fragment {
     public static final String TAG = "MainMenuFragment";
@@ -90,8 +96,31 @@ public class MainMenuFragment extends Fragment {
 
         mInstancesList = view.findViewById(R.id.instances_list);
         if (mInstancesList != null) {
-            mInstancesList.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+            mInstancesList.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
             reloadInstances();
+        }
+
+        View instancesPanel = view.findViewById(R.id.instances_panel);
+        ImageButton toggleBtn = view.findViewById(R.id.btn_toggle_instances);
+        if (toggleBtn != null && instancesPanel != null) {
+            toggleBtn.setOnClickListener(v -> {
+                Slide slide = new Slide(Gravity.END);
+                slide.setDuration(350);
+                TransitionManager.beginDelayedTransition((ViewGroup) view, slide);
+                
+                boolean isVisible = instancesPanel.getVisibility() == View.VISIBLE;
+                instancesPanel.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+                
+                // Rotate toggle button or change icon
+                toggleBtn.animate().rotation(isVisible ? 180f : 0f).setDuration(350).start();
+            });
+        }
+
+        ImageButton mAddInstancePanel = view.findViewById(R.id.btn_add_instance_panel);
+        if (mAddInstancePanel != null) {
+            mAddInstancePanel.setOnClickListener(v -> {
+                Tools.swapFragment(requireActivity(), ProfileTypeSelectFragment.class, ProfileTypeSelectFragment.TAG, null);
+            });
         }
 
         ExtraCore.addExtraListener("TRIGGER_INSTALLER", (key, value) -> {
@@ -142,9 +171,6 @@ public class MainMenuFragment extends Fragment {
     }
 
     private class InstanceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        private static final int TYPE_INSTANCE = 0;
-        private static final int TYPE_ADD = 1;
-
         private final List<DisplayInstance> mList;
         private int mSelectedIndex;
 
@@ -153,82 +179,55 @@ public class MainMenuFragment extends Fragment {
             mSelectedIndex = selectedIndex;
         }
 
-        @Override
-        public int getItemViewType(int position) {
-            return position < mList.size() ? TYPE_INSTANCE : TYPE_ADD;
-        }
-
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            if (viewType == TYPE_INSTANCE) {
-                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_instance, parent, false);
-                return new InstanceViewHolder(v);
-            } else {
-                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_instance, parent, false);
-                return new AddViewHolder(v);
-            }
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_instance, parent, false);
+            return new InstanceViewHolder(v);
         }
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            if (holder instanceof InstanceViewHolder) {
-                InstanceViewHolder vh = (InstanceViewHolder) holder;
-                int bindingPos = vh.getBindingAdapterPosition();
-                if (bindingPos == RecyclerView.NO_POSITION || bindingPos >= mList.size()) return;
-                
-                DisplayInstance instance = mList.get(bindingPos);
-                vh.name.setText(instance.name);
-                vh.version.setText(instance.versionId);
-                
-                boolean isSelected = bindingPos == mSelectedIndex;
-                vh.itemView.setBackgroundResource(isSelected ? R.drawable.launcher_card_border_bg : R.drawable.launcher_card_flat);
+            InstanceViewHolder vh = (InstanceViewHolder) holder;
+            int bindingPos = vh.getBindingAdapterPosition();
+            if (bindingPos == RecyclerView.NO_POSITION || bindingPos >= mList.size()) return;
+            
+            DisplayInstance instance = mList.get(bindingPos);
+            vh.name.setText(instance.name);
+            vh.version.setText(instance.versionId);
+            
+            boolean isSelected = bindingPos == mSelectedIndex;
+            vh.itemView.setBackgroundResource(isSelected ? R.drawable.launcher_card_border_bg : R.drawable.launcher_card_flat);
 
-                vh.itemView.setOnClickListener(v -> {
-                    int pos = vh.getBindingAdapterPosition();
-                    if (pos == RecyclerView.NO_POSITION) return;
-                    Instances.setSelectedInstance(mList.get(pos));
-                    mSelectedIndex = pos;
-                    notifyDataSetChanged();
-                    
-                    // Open Instance Editor (Fabric etc. settings)
-                    Tools.swapFragment(requireActivity(), InstanceEditorFragment.class, InstanceEditorFragment.TAG, null);
-                });
-
-                vh.playButton.setOnClickListener(v -> {
-                    int pos = vh.getBindingAdapterPosition();
-                    if (pos == RecyclerView.NO_POSITION) return;
-                    Instances.setSelectedInstance(mList.get(pos));
-                    ExtraCore.setValue(ExtraConstants.LAUNCH_GAME, true);
-                });
+            vh.itemView.setOnClickListener(v -> {
+                int pos = vh.getBindingAdapterPosition();
+                if (pos == RecyclerView.NO_POSITION) return;
+                Instances.setSelectedInstance(mList.get(pos));
+                mSelectedIndex = pos;
+                notifyDataSetChanged();
                 
-                vh.menuButton.setOnClickListener(v -> {
-                    int pos = vh.getBindingAdapterPosition();
-                    if (pos == RecyclerView.NO_POSITION) return;
-                    Instances.setSelectedInstance(mList.get(pos));
-                    Tools.swapFragment(requireActivity(), InstanceEditorFragment.class, InstanceEditorFragment.TAG, null);
-                });
+                // Open Instance Editor (Fabric etc. settings)
+                Tools.swapFragment(requireActivity(), InstanceEditorFragment.class, InstanceEditorFragment.TAG, null);
+            });
 
-            } else if (holder instanceof AddViewHolder) {
-                AddViewHolder vh = (AddViewHolder) holder;
-                vh.name.setText("+ New Instance");
-                vh.name.setTextColor(0xFF3D93FF);
-                vh.version.setVisibility(View.GONE);
-                vh.playButton.setVisibility(View.GONE);
-                vh.menuButton.setVisibility(View.GONE);
-                vh.icon.setVisibility(View.GONE);
-                vh.itemView.setBackgroundResource(R.drawable.launcher_btn_new_instance);
-                
-                vh.itemView.setOnClickListener(v -> {
-                    // Open Type Selection (Fabric, Forge, etc.)
-                    Tools.swapFragment(requireActivity(), ProfileTypeSelectFragment.class, ProfileTypeSelectFragment.TAG, null);
-                });
-            }
+            vh.playButton.setOnClickListener(v -> {
+                int pos = vh.getBindingAdapterPosition();
+                if (pos == RecyclerView.NO_POSITION) return;
+                Instances.setSelectedInstance(mList.get(pos));
+                ExtraCore.setValue(ExtraConstants.LAUNCH_GAME, true);
+            });
+            
+            vh.menuButton.setOnClickListener(v -> {
+                int pos = vh.getBindingAdapterPosition();
+                if (pos == RecyclerView.NO_POSITION) return;
+                Instances.setSelectedInstance(mList.get(pos));
+                Tools.swapFragment(requireActivity(), InstanceEditorFragment.class, InstanceEditorFragment.TAG, null);
+            });
         }
 
         @Override
         public int getItemCount() {
-            return mList.size() + 1;
+            return mList.size();
         }
     }
 
@@ -238,21 +237,6 @@ public class MainMenuFragment extends Fragment {
         ImageButton menuButton, playButton;
 
         InstanceViewHolder(View v) {
-            super(v);
-            name = v.findViewById(R.id.instance_name);
-            version = v.findViewById(R.id.instance_version);
-            icon = v.findViewById(R.id.instance_icon);
-            menuButton = v.findViewById(R.id.instance_menu);
-            playButton = v.findViewById(R.id.instance_play_small);
-        }
-    }
-
-    private static class AddViewHolder extends RecyclerView.ViewHolder {
-        TextView name, version;
-        ImageView icon;
-        ImageButton menuButton, playButton;
-
-        AddViewHolder(View v) {
             super(v);
             name = v.findViewById(R.id.instance_name);
             version = v.findViewById(R.id.instance_version);

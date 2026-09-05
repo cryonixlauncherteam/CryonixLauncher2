@@ -5,10 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:background="@android:color/transparent"
     android:padding="24dp">
-
-    <!-- Central Glow Removed -->
 
     <!-- Hidden spinner to allow opening profile editor -->
     <com.kdt.mcgui.mcVersionSpinner
@@ -19,39 +18,108 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.kdt.mcgui.MineButton
-        android:id="@+id/play_button"
-        android:layout_width="240dp"
-        android:layout_height="64dp"
-        android:background="@drawable/launcher_launch_btn"
-        android:drawableStart="@drawable/ic_px_play"
-        android:drawablePadding="12dp"
-        android:drawableTint="#3D93FF"
-        android:fontFamily="sans-serif-black"
-        android:letterSpacing="0.1"
-        android:paddingStart="60dp"
-        android:paddingEnd="60dp"
-        android:stateListAnimator="@null"
-        android:text="LAUNCH"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/instances_list"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.714" />
+    <!-- Polished Central LAUNCH Button -->
+    <!-- Main Content Area (Launch Section) -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toStartOf="@+id/instances_panel"
+        app:layout_constraintStart_toStartOf="parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/instances_list"
-        android:layout_width="match_parent"
-        android:layout_height="110dp"
-        android:clipToPadding="false"
-        android:orientation="horizontal"
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp"
+        <com.kdt.mcgui.MineButton
+            android:id="@+id/play_button"
+            android:layout_width="260dp"
+            android:layout_height="68dp"
+            android:background="@drawable/launcher_launch_btn"
+            android:drawableStart="@drawable/ic_px_play"
+            android:drawablePadding="14dp"
+            android:drawableTint="#3D93FF"
+            android:fontFamily="sans-serif-black"
+            android:letterSpacing="0.1"
+            android:paddingStart="64dp"
+            android:paddingEnd="64dp"
+            android:stateListAnimator="@null"
+            android:text="LAUNCH"
+            android:textColor="#000000"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.65" />
+
+        <!-- Panel Toggle Button -->
+        <ImageButton
+            android:id="@+id/btn_toggle_instances"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/launcher_btn_account"
+            android:contentDescription="Toggle Instances"
+            android:padding="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_px_viewport_expand"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.984"
+            app:tint="#FFFFFF" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Instances Panel (Right Side) -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/instances_panel"
+        android:layout_width="260dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/launcher_card_flat"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_instance" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/instances_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="sans-serif-black"
+            android:letterSpacing="0.1"
+            android:text="INSTANCES"
+            android:textColor="#8A8A8A"
+            android:textSize="11sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btn_add_instance_panel"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_add"
+            app:layout_constraintBottom_toBottomOf="@id/instances_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/instances_label"
+            app:tint="#3D93FF"
+            android:contentDescription="New Instance" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/instances_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="12dp"
+            android:clipToPadding="false"
+            android:padding="8dp"
+            android:scrollbars="vertical"
+            android:scrollbarStyle="outsideOverlay"
+            android:fadeScrollbars="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/instances_label"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_instance" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,17 +3,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/instance_card_root"
-    android:layout_width="220dp"
-    android:layout_height="80dp"
-    android:layout_marginEnd="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="84dp"
+    android:layout_marginBottom="10dp"
     android:background="@drawable/launcher_card_flat"
     android:padding="12dp">
 
     <ImageView
         android:id="@+id/instance_icon"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:contentDescription="Icon"
+        android:scaleType="centerInside"
         android:src="@drawable/cryonixlauncher"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,7 +24,7 @@
         android:id="@+id/instance_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="14dp"
+        android:layout_marginStart="16dp"
         android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
         android:singleLine="true"
@@ -53,15 +54,15 @@
         android:src="@drawable/ic_px_sliders"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="#8A8A8A" />
+        app:tint="#4DFFFFFF" />
 
     <ImageButton
         android:id="@+id/instance_play_small"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
         android:background="@drawable/launcher_sidebar_home_bg"
         android:contentDescription="Play"
-        android:padding="8dp"
+        android:padding="9dp"
         android:scaleType="centerInside"
         android:src="@drawable/ic_px_play"
         app:layout_constraintBottom_toBottomOf="parent"

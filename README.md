@@ -121,33 +121,6 @@ Before building the launcher, make sure you have:
 * JDK / Java runtime required by the project
 * A Windows, Linux, or macOS development environment
 
-## Build
-
-Clone the repository:
-
-```bash
-git clone https://github.com/YOUR_USERNAME/CryonixLauncherV2.git
-cd CryonixLauncherV2
-```
-
-Build the debug version:
-
-### Linux / macOS
-
-```bash
-./gradlew :app_pojavlauncher:assembleDebug
-```
-
-### Windows
-
-```bat
-.\gradlew.bat :app_pojavlauncher:assembleDebug
-```
-
-After a successful build, the generated APK can be found inside the project's build output directory.
-
----
-
 # 🗺️ Roadmap
 
 The CryonixLauncher V2 roadmap is focused on improving performance, stability, UI, and Minecraft compatibility.
