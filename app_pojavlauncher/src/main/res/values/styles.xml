@@ -7,10 +7,29 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:statusBarColor">@color/background_status_bar</item>
         <item name="android:navigationBarColor">@color/background_app</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="preferenceTheme">@style/CryonixPreferenceTheme</item>
 
         <item name="android:textSize">@dimen/_12ssp</item>
+    </style>
 
+    <style name="CryonixPreferenceTheme" parent="@style/PreferenceThemeOverlay.v14.Material">
+        <item name="preferenceStyle">@style/CryonixPreferenceStyle</item>
+        <item name="preferenceCategoryStyle">@style/CryonixPreferenceCategoryStyle</item>
+        <item name="switchPreferenceStyle">@style/CryonixPreferenceStyle</item>
+        <item name="checkBoxPreferenceStyle">@style/CryonixPreferenceStyle</item>
+        <item name="editTextPreferenceStyle">@style/CryonixPreferenceStyle</item>
+        <item name="dialogPreferenceStyle">@style/CryonixPreferenceStyle</item>
+        <item name="dropdownPreferenceStyle">@style/CryonixPreferenceStyle</item>
+    </style>
+
+    <style name="CryonixPreferenceStyle" parent="@style/Preference.Material">
+        <item name="android:layout">@layout/cryonix_preference_item</item>
+        <item name="allowDividerAbove">false</item>
+        <item name="allowDividerBelow">false</item>
+    </style>
+
+    <style name="CryonixPreferenceCategoryStyle" parent="@style/Preference.Category.Material">
+        <item name="android:layout">@layout/cryonix_preference_category</item>
     </style>
 
     <style name="LauncherFragment_Divider">

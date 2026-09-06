@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -167,6 +168,7 @@ public class AccountSpinner extends AppCompatSpinner implements LoginListener, A
     }
 
     private void refreshAccount(Account account) {
+        updateTopBar(account);
         // Wait until all tasks (including other possible login tasks) are done before
         // attempting to refresh the account.
         ProgressKeeper.waitUntilDone(()->{
@@ -183,6 +185,26 @@ public class AccountSpinner extends AppCompatSpinner implements LoginListener, A
     private void dismissPopup() {
         onDetachedFromWindow();
         onAttachedToWindow();
+    }
+
+    private void updateTopBar(Account account) {
+        if (account == null) return;
+        if (!(getContext() instanceof Activity)) return;
+        Activity activity = (Activity) getContext();
+
+        final TextView nameTop = activity.findViewById(R.id.profile_name_top);
+        final ImageView avatarTop = activity.findViewById(R.id.profile_avatar_top);
+
+        if (nameTop != null) nameTop.setText(account.username);
+        if (avatarTop != null) {
+            Bitmap face = account.getSkinFace();
+            if (face != null) {
+                avatarTop.setImageBitmap(face);
+            } else {
+                // Default fallback if no skin is found
+                avatarTop.setImageResource(R.drawable.cryonixlauncher);
+            }
+        }
     }
 
     private void createAccount() {
@@ -206,6 +228,7 @@ public class AccountSpinner extends AppCompatSpinner implements LoginListener, A
 
         Toast.makeText(getContext(), R.string.main_login_done, Toast.LENGTH_SHORT).show();
         Accounts.setCurrent(account);
+        updateTopBar(account);
         reload();
     }
 
@@ -342,8 +365,12 @@ public class AccountSpinner extends AppCompatSpinner implements LoginListener, A
             BitmapDrawable accountHead = mSkinHeadCache.get(headCacheHash);
             if (accountHead == null){
                 Bitmap accountSkinFace = account.getSkinFace();
-                accountHead = new BitmapDrawable(resources, accountSkinFace);
-                mSkinHeadCache.put(headCacheHash, accountHead);
+                if (accountSkinFace != null) {
+                    accountHead = new BitmapDrawable(resources, accountSkinFace);
+                    mSkinHeadCache.put(headCacheHash, accountHead);
+                } else {
+                    accountHead = (BitmapDrawable) ResourcesCompat.getDrawable(resources, R.drawable.cryonixlauncher, theme);
+                }
             }
 
             textview.setText(account.username);

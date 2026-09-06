@@ -64,8 +64,6 @@ public class LauncherActivity extends BaseActivity {
     private VideoView mVideoBackground;
     private ProgressLayout mProgressLayout;
 
-    private View mNavGroup;
-    private ImageButton mBtnDownload, mBtnControls, mBtnInfo, mBtnGallery;
     private ImageButton mSidebarHome, mSidebarMouse, mSidebarControls, mSidebarInfo, mSidebarSettings;
     private ProgressServiceKeeper mProgressServiceKeeper;
     private NotificationManager mNotificationManager;
@@ -348,11 +346,6 @@ public class LauncherActivity extends BaseActivity {
         mVideoBackground = findViewById(R.id.video_background);
         mProgressLayout = findViewById(R.id.progress_layout);
 
-        mBtnDownload = findViewById(R.id.btn_download);
-        mBtnControls = findViewById(R.id.btn_controls);
-        mBtnInfo = findViewById(R.id.btn_info_top);
-        mBtnGallery = findViewById(R.id.btn_gallery);
-
         mSidebarHome = findViewById(R.id.sidebar_home);
         mSidebarMouse = findViewById(R.id.sidebar_mouse);
         mSidebarControls = findViewById(R.id.sidebar_controls);
@@ -370,17 +363,12 @@ public class LauncherActivity extends BaseActivity {
 
         mSidebarHome.setOnClickListener(homeListener);
         mSidebarSettings.setOnClickListener(settingsListener);
-        mSettingsButton.setOnClickListener(settingsListener);
+        if (mSettingsButton != null) mSettingsButton.setOnClickListener(settingsListener);
 
-        mBtnDownload.setOnClickListener(v -> runInstallerWithConfirmation());
-        mBtnControls.setOnClickListener(v -> startActivity(new Intent(this, CustomControlsActivity.class)));
         mSidebarControls.setOnClickListener(v -> startActivity(new Intent(this, CustomControlsActivity.class)));
         
         View.OnClickListener infoListener = v -> Tools.shareLog(this);
-        mBtnInfo.setOnClickListener(infoListener);
         mSidebarInfo.setOnClickListener(infoListener);
-
-        mBtnGallery.setOnClickListener(v -> Tools.openURL(this, getString(R.string.social_media_invite)));
         
         mSidebarMouse.setOnClickListener(v -> {
              // Toggle mouse or something? For now just home
