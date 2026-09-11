@@ -14,7 +14,7 @@
 
 <p align="center">
 
-[![GitHub Release](https://github.com/cryonixlauncherteam/CryonixLauncher2/releases/tag/Beta_v2)
+[![GitHub Release]!](https://github.com/cryonixlauncherteam/CryonixLauncher2/releases/tag/Beta_v2)
 
 [![License](https://img.shields.io/badge/license-CryonixLauncherV2-blue.svg)](LICENSE)
 
